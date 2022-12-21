@@ -22,9 +22,7 @@ echo "CURRENT build is: ${currentBuild.currentResult}"
 
 stage('Gitcheckuoutcode')
 {
-git branch: 'walmart-dev', url: 'https://github.com/kejaa11411/maven-web-
-
-application.git'
+git branch: 'walmart-dev', url: 'https://github.com/kejaa11411/maven-web-application.git'
 }
 stage('Build')
 {
@@ -42,9 +40,7 @@ stage('DeployTo-Tomcat')
 {
 sshagent(['61f28c9a-c544-4347-b734-b590af3b2dda'])
  {
-    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-
-
-user@172.31.38.163:/opt/tomcat9/webapps"
+    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@172.31.38.163:/opt/tomcat9/webapps"
 }
 }
 }
