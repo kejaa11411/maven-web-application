@@ -5,11 +5,7 @@ try {
 sendSlackNotification('STARTED')
 def mavenHome = tool name: "maven-3.8.5"
 
-properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', 
-
-artifactNumToKeepStr: '', daysToKeepStr: '2', numToKeepStr: '5')), [$class: 
-
-'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([pollSCM('* * * * *')])])
+properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '2', numToKeepStr: '5')), [$class: 'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([pollSCM('* * * * *')])])
 
 echo "Jon name is: ${env.JOB_NAME}"
 echo "Build ID is: ${env.BUILD_ID}"
