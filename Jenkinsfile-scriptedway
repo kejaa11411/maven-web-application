@@ -9,9 +9,7 @@ properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '',
 
 artifactNumToKeepStr: '', daysToKeepStr: '2', numToKeepStr: '5')), [$class: 
 
-'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([pollSCM('* * * * 
-
-*')])])
+'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([pollSCM('* * * * *')])])
 
 echo "Jon name is: ${env.JOB_NAME}"
 echo "Build ID is: ${env.BUILD_ID}"
