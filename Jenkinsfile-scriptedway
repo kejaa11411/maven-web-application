@@ -1,5 +1,96 @@
 node {
 
+try {
+
+sendSlackNotification('STARTED')
+def mavenHome = tool name: "maven-3.8.5"
+
+properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', 
+
+artifactNumToKeepStr: '', daysToKeepStr: '2', numToKeepStr: '5')), [$class: 
+
+'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([pollSCM('* * * * 
+
+*')])])
+
+echo "Jon name is: ${env.JOB_NAME}"
+echo "Build ID is: ${env.BUILD_ID}"
+echo "Node Name is: ${env.NODE_NAME}"
+echo "Work Space is: ${env.WORKSPACE}"
+echo "Build URL is: ${env.BUILD_URL}"
+echo "Branch Name is: ${env.BRANCH_NAME}"
+
+echo "CURRENT build is: ${currentBuild.currentResult}"
+
+stage('Gitcheckuoutcode')
+{
+git branch: 'walmart-dev', url: 'https://github.com/kejaa11411/maven-web-
+
+application.git'
+}
+stage('Build')
+{
+ sh "${mavenHome}/bin/mvn clean package"
+}
+stage('Execute-Sonarqube')
+{
+sh "${mavenHome}/bin/mvn sonar:sonar"
+}
+stage('uploadNexus-Server')
+{
+sh "${mavenHome}/bin/mvn deploy"
+}
+stage('DeployTo-Tomcat')
+{
+sshagent(['61f28c9a-c544-4347-b734-b590af3b2dda'])
+ {
+    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-
+
+user@172.31.38.163:/opt/tomcat9/webapps"
+}
+}
+}
+catch (e) {
+    currentBuild.result = "FAILED"
+    throw e
+  } finally {
+        notifyBuild(currentBuild.result)
+  }
+}
+
+def sendSlackNotification(String buildStatus = 'STARTED') {
+  // build status of null means successful
+  buildStatus =  buildStatus ?: 'SUCCESSFUL'
+
+  // Default values
+  def colorName = 'RED'
+  def colorCode = '#FF0000'
+  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+  def summary = "${subject} (${env.BUILD_URL})"
+
+  // Override default values based on build status
+  if (buildStatus == 'STARTED') {
+    color = 'YELLOW'
+    colorCode = '#FFFF00'
+  } else if (buildStatus == 'SUCCESSFUL') {
+    color = 'GREEN'
+    colorCode = '#00FF00'
+  } else {
+    color = 'RED'
+    colorCode = '#FF0000'
+  }
+
+  // Send notifications
+  slackSend (color: colorCode, message: summary)
+}
+
+
+
+
+/* 
+
+node {
+
 def mavenHome = tool name: "maven-3.8.5"
 
 
@@ -40,3 +131,4 @@ sshagent(['61f28c9a-c544-4347-b734-b590af3b2dda'])
 }
 }
 }
+*/
