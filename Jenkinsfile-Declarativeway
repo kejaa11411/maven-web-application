@@ -1,7 +1,7 @@
 pipeline
 {
 agent {
-    lable "nodes"
+    label "nodes"
 }
 
     tools
