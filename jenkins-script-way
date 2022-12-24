@@ -7,6 +7,7 @@ sendSlackNotification('STARTED')
 def mavenHome = tool name: "maven-3.8.5"
 
 properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '3', numToKeepStr: '3')), parameters([choice(choices: ['Yuvaraj'], name: 'RunnerName')]), pipelineTriggers([pollSCM('* * * * *')])])
+slackSend channel: 'test-devops', message: 'job is triggered '
 
 echo "Jon name is: ${env.JOB_NAME}"
 echo "Build ID is: ${env.BUILD_ID}"
