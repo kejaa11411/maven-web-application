@@ -3,7 +3,7 @@ node {
 
 try {
 
-sendSlackNotification('STARTED')
+sendSlackNotifications('STARTED')
 
 def mavenHome = tool name: "maven-3.8.5"
 
@@ -47,7 +47,7 @@ catch (e) {
     currentBuild.result = "FAILED"
     throw e
   } finally {
-        sendSlackNotification(currentBuild.result)
+        sendSlackNotifications(currentBuild.result)
   }
 }
 
